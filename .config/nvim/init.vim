@@ -496,23 +496,27 @@ augroup UserGitSignColumnColor
 augroup END
 
 call denite#custom#alias('source', 'file/rec/git', 'file/rec')
+call denite#custom#alias('source', 'grep/git', 'grep')
 call denite#custom#var('file/rec/git', 'command',
       \ ['rg', '--files', '--hidden', '--glob', '!.git', '--color', 'never'])
 call denite#custom#var('file/rec', 'command',
       \ ['rg', '--files', '--hidden','--no-ignore', '--glob', '!.git', '--color', 'never'])
+call denite#custom#var('grep/git', {
+      \ 'command': ['rg', '--threads', '1'],
+      \ 'recursive_opts': [],
+      \ 'final_opts': [],
+      \ 'pattern_opt': ['--regexp'],
+      \ 'separator': ['--'],
+      \ 'default_opts': ['--smart-case', '--vimgrep', '--no-heading'],
+      \ })
 call denite#custom#var('grep', {
       \ 'command': ['rg', '--threads', '1'],
       \ 'recursive_opts': [],
       \ 'final_opts': [],
+      \ 'pattern_opt': ['--regexp'],
       \ 'separator': ['--'],
-      \ 'default_opts': ['--smart-case', '--vimgrep', '--no-heading'],
+      \ 'default_opts': ['--smart-case', '--no-ignore', '--glob', '!.git', '--vimgrep', '--no-heading'],
       \ })
-call denite#custom#var('grep', 'command', ['rg'])
-call denite#custom#var('grep', 'default_opts', ['--hidden', '--vimgrep', '--heading', '-S'])
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
-call denite#custom#var('grep', 'separator', ['--'])
-call denite#custom#var('grep', 'final_opts', [])
 call denite#custom#var('buffer', 'date_format', '')
 call denite#custom#filter('matcher/clap',
       \ 'clap_path', expand('~/.vim/plugged/vim-clap'))
@@ -526,7 +530,8 @@ call denite#custom#source('file/rec/git', 'matchers', [
 nmap <c-p> :Denite file/rec/git<CR>
 nmap <Leader>p :Denite file/rec<CR>
 nmap <Leader>d :Denite directory_rec<CR>
-nmap <Leader>r :<C-u>Denite grep:. -no-empty<CR>
+nmap <Leader>r :<C-u>Denite grep/git:. -no-empty<CR>
+nmap <Leader>gr :<C-u>Denite grep:. -no-empty<CR>
 nmap <Leader>gb :<C-u>DeniteGitto gitto/branch<CR>
 
 autocmd FileType denite call s:denite_my_settings()
