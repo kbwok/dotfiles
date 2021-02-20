@@ -73,6 +73,7 @@ Plug 'simeji/winresizer'
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'jackguo380/vim-lsp-cxx-highlight'
 Plug 'junegunn/vader.vim'
+Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 call plug#end()
 
 let g:vim_vue_plugin_load_full_syntax = 1
@@ -315,6 +316,7 @@ let g:coc_global_extensions = [
       \'coc-react-refactor',
       \'coc-styled-components',
       \'coc-docker',
+      \'coc-vimtex',
       \'coc-db'
       \]
 nnoremap <Leader>c  :call CocActionAsync('highlight')<CR>
