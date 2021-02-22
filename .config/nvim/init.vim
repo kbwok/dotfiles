@@ -591,3 +591,6 @@ endfunction
 let g:coc_enable_locationlist = 0
 autocmd! User CocLocationsChange Denite -smartcase -auto-action=preview coc-jump-locations
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
