@@ -76,6 +76,8 @@ if dein#load_state(s:dein_dir)
   call dein#add('Shougo/defx.nvim')
   call dein#add('Shougo/denite.nvim')
   call dein#add('liuchengxu/vim-clap')
+  call dein#add('Shougo/context_filetype.vim')
+  call dein#add('osyo-manga/vim-precious')
   call dein#add('xuhdev/vim-latex-live-preview', {
         \'on_ft': 'tex',
         \})
