@@ -5,75 +5,97 @@ if has('vim_starting')
   set nocompatible
 endif
 
-if !filereadable(expand('~/.vim/autoload/plug.vim'))
-  if !executable("curl")
-    echoerr "You have to install curl or first install vim-plug yourself!"
-    execute "q!"
+let s:dein_dir = expand('~/.cache/dein')
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
+
+" dein installation check {{{
+if &runtimepath !~# '/dein.vim'
+  if !isdirectory(s:dein_repo_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
   endif
-  echo "Installing Vim-Plug..."
-  echo ""
-  silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  silent !\curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-  let g:not_finish_vimplug = "yes"
-  autocmd VimEnter * PlugInstall
+  if !executable("curl")
+    silent !\curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  endif
+  execute 'set runtimepath^=' . s:dein_repo_dir
+endif
+" }}}
+
+
+if dein#load_state(s:dein_dir)
+  call dein#begin(s:dein_dir)
+
+  if !has('nvim')
+    call dein#add('roxma/nvim-yarp')
+    call dein#add('roxma/vim-hug-neovim-rpc')
+  endif
+  call dein#add('wsdjeg/dein-ui.vim')
+
+  call dein#add('Shougo/vimproc.vim', {
+      \   'build' : 'make',
+      \   'lazy': 1,
+      \ })
+  call dein#add('thinca/vim-quickrun', {
+      \   'depends': 'vimproc.vim',
+      \   'on_cmd': 'QuickRun',
+      \ })
+  call dein#add('vim-airline/vim-airline')
+  call dein#add('tpope/vim-surround')
+  call dein#add('ervandew/supertab')
+  call dein#add('mattn/emmet-vim')
+  call dein#add('SirVer/ultisnips')
+  call dein#add('tomtom/tcomment_vim')
+  call dein#add('maxmellon/vim-jsx-pretty')
+  call dein#add('editorconfig/editorconfig-vim')
+  call dein#add('terryma/vim-multiple-cursors')
+  call dein#add('ghifarit53/tokyonight-vim')
+  call dein#add('liuchengxu/vista.vim')
+  call dein#add('thosakwe/vim-flutter')
+  call dein#add('godlygeek/tabular')
+  call dein#add('previm/previm')
+  call dein#add('jparise/vim-graphql')
+  call dein#add('tpope/vim-dadbod')
+  call dein#add('tpope/vim-fugitive')
+  call dein#add('kristijanhusak/vim-dadbod-ui')
+  call dein#add('junegunn/gv.vim')
+  call dein#add('easymotion/vim-easymotion')
+  call dein#add('glidenote/memolist.vim')
+  call dein#add('HerringtonDarkholme/yats.vim')
+  call dein#add('ianks/vim-tsx')
+  call dein#add('tyru/eskk.vim')
+  call dein#add('Yggdroot/indentLine')
+  call dein#add('tyru/open-browser.vim')
+  call dein#add('ivanov/vim-ipython')
+  call dein#add('https://github.com/kbwo/coc-denite')
+  call dein#add('hrsh7th/vim-gitto')
+  call dein#add('posva/vim-vue')
+  call dein#add('leafOfTree/vim-vue-plugin')
+  call dein#add('simeji/winresizer')
+  call dein#add('dart-lang/dart-vim-plugin')
+  call dein#add('jackguo380/vim-lsp-cxx-highlight')
+  call dein#add('junegunn/vader.vim')
+  call dein#add('Shougo/defx.nvim')
+  call dein#add('Shougo/denite.nvim')
+  call dein#add('liuchengxu/vim-clap')
+  call dein#add('Shougo/deol.nvim', {
+      \   'build' : 'make',
+      \ })
+  call dein#add('raimon49/requirements.txt.vim', {
+      \   'on_ft' : 'requirements',
+      \ })
+  call dein#add('neoclide/coc.nvim', {
+      \   'merged': 0,
+      \   'rev': 'release'
+      \})
+
+  call dein#end()
+  call dein#save_state()
 endif
 
-" plugin
-call plug#begin(expand('~/.vim/plugged'))
-" for debug
-Plug 'thinca/vim-quickrun', {'on' : 'QuickRun'}
-" Plug 'joonty/vdebug'
-Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'Shougo/deol.nvim', {'do' : 'make'}
-Plug 'vim-airline/vim-airline'
-Plug 'tpope/vim-surround'
-Plug 'ervandew/supertab'
-Plug 'mattn/emmet-vim'
-Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
-Plug 'SirVer/ultisnips'
-Plug 'tomtom/tcomment_vim'
-Plug 'maxmellon/vim-jsx-pretty'
-Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'editorconfig/editorconfig-vim'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'ghifarit53/tokyonight-vim'
-Plug 'liuchengxu/vista.vim'
-Plug 'thosakwe/vim-flutter'
-Plug 'godlygeek/tabular'
-Plug 'previm/previm'
-Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install()}}
-if has('nvim')
-  Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/defx.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
+call dein#remote_plugins()
+
+if dein#check_install()
+  call dein#install()
 endif
-Plug 'jparise/vim-graphql'
-Plug 'tpope/vim-dadbod'
-Plug 'tpope/vim-fugitive'
-Plug 'kristijanhusak/vim-dadbod-ui'
-Plug 'junegunn/gv.vim'
-Plug 'easymotion/vim-easymotion'
-Plug 'glidenote/memolist.vim'
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'ianks/vim-tsx'
-Plug 'tyru/eskk.vim'
-Plug 'Yggdroot/indentLine'
-Plug 'tyru/open-browser.vim'
-Plug 'ivanov/vim-ipython'
-Plug 'https://github.com/kbwo/coc-denite'
-Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'hrsh7th/vim-gitto'
-Plug 'hrsh7th/vim-denite-gitto'
-Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary'}
-Plug 'posva/vim-vue'
-Plug 'leafOfTree/vim-vue-plugin'
-Plug 'simeji/winresizer'
-Plug 'dart-lang/dart-vim-plugin'
-Plug 'jackguo380/vim-lsp-cxx-highlight'
-Plug 'junegunn/vader.vim'
-call plug#end()
 
 let g:vim_vue_plugin_load_full_syntax = 1
 inoremap <c-u> <Nop>
